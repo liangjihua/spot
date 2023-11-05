@@ -1,6 +1,7 @@
 {
-  "name": "@airtasker/spot",
-  "version": "1.13.0",
+  "name": "@westo/spot",
+  "description":"fork from @airtasker/spot",
+  "version": "1.12.2",
   "author": "Francois Wouts, Leslie Fung",
   "bin": {
     "spot": "./bin/run"

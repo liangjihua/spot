@@ -40,6 +40,14 @@ describe("endpoint parser", () => {
           }
         ]
       },
+      extension: {
+        "x-simple": "spot",
+        "x-object": {
+          foo: "foo",
+          bar: "bar"
+        },
+        "x-array": ["foo", "bar"]
+      },
       description: "endpoint description",
       summary: undefined,
       draft: false,
@@ -116,7 +124,8 @@ describe("endpoint parser", () => {
       path: "/path",
       request: undefined,
       responses: [],
-      tags: []
+      tags: [],
+      extension: {}
     });
   });
 
@@ -137,7 +146,8 @@ describe("endpoint parser", () => {
       path: "/path",
       request: undefined,
       responses: [],
-      tags: []
+      tags: [],
+      extension: {}
     });
   });
 
@@ -228,7 +238,8 @@ describe("endpoint parser", () => {
       path: "/path",
       request: undefined,
       responses: [],
-      tags: []
+      tags: [],
+      extension: {}
     });
   });
 });

@@ -13,6 +13,7 @@ import {
   getObjLiteralProp,
   getObjLiteralPropOrThrow,
   getPropValueAsArrayOrThrow,
+  getPropValueAsObjectOrThrow,
   getPropValueAsStringOrThrow,
   isHttpMethod
 } from "./parser-helpers";
@@ -45,6 +46,11 @@ export function parseEndpoint(
   const tagsResult = extractEndpointTags(decoratorConfig);
   if (tagsResult.isErr()) return tagsResult;
   const tags = tagsResult.unwrap();
+
+  // Handle extension
+  const extensionResult = extractEndpointExtensions(decoratorConfig)
+  if (extensionResult.isErr()) return extensionResult;
+  const extension = extensionResult.unwrap();
 
   // Handle jsdoc
   const jsDocNode = getJsDoc(klass);
@@ -137,6 +143,7 @@ export function parseEndpoint(
     description,
     summary,
     tags,
+    extension,
     method,
     path,
     request,
@@ -144,6 +151,35 @@ export function parseEndpoint(
     defaultResponse,
     draft
   });
+}
+
+function extractEndpointExtensions(
+  decoratorConfig: ObjectLiteralExpression
+): Result<object, ParserError> {
+  const extensionProp = getObjLiteralProp<EndpointConfig>(decoratorConfig, "extension");
+  if (extensionProp === undefined) return ok({});
+  const extensionLiteral = getPropValueAsObjectOrThrow(extensionProp);
+  const properties = extensionLiteral.getProperties()
+  const propertyAssignment = properties.filter(Node.isPropertyAssignment)
+  if(properties.length != propertyAssignment.length) {
+    return err(
+      new ParserError("enpoint extension only support property", {
+        file: extensionLiteral.getSourceFile().getFilePath(),
+        position: extensionLiteral.getPos()
+      })
+    )
+  }
+  for (const property of propertyAssignment) {
+    if (!property.getName().startsWith("\"x-")) {
+      return err(
+        new ParserError("endpoint extension key must start with \"x-\"", {
+          file: property.getSourceFile().getFilePath(),
+          position: property.getPos()
+        })
+      )
+    }
+  }
+  return ok(eval(`(${extensionLiteral.getText()})`))
 }
 
 function extractEndpointTags(

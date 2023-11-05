@@ -27,4 +27,6 @@ export interface EndpointConfig {
   path: string;
   /** Endpoint grouping tags */
   tags?: string[];
+  /** Endpoint extensions */
+  extension?: object;
 }

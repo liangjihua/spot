@@ -21,6 +21,7 @@ import {
   isUnionType,
   possibleRootTypes,
   Type,
+  TypeKind,
   TypeTable
 } from "../../types";
 import { KeyOfType } from "../../util";
@@ -131,8 +132,10 @@ function endpointToOperationObject(
 ): OperationObject {
   const endpointRequest = endpoint.request;
   const endpointRequestBody = endpointRequest?.body;
+  const endpointExtension = endpoint.extension || {}
 
   return {
+    ...endpointExtension,
     tags: endpoint.tags.length > 0 ? endpoint.tags : undefined,
     description: endpoint.description,
     summary: endpoint.summary,

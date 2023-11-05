@@ -30,6 +30,7 @@ export interface Endpoint {
   description?: string;
   summary?: string;
   tags: string[];
+  extension?: object;
   method: HttpMethod;
   path: string;
   request?: Request;
