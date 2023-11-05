@@ -14,6 +14,7 @@ export function generateData(types: TypeTable, type: Type): any {
       return randomBoolean();
     case TypeKind.BOOLEAN_LITERAL:
       return type.value;
+    case TypeKind.FILE:
     case TypeKind.STRING:
       return generateRandomString();
     case TypeKind.STRING_LITERAL:

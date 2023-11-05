@@ -24,6 +24,7 @@ export function isPathParamTypeSafe(type: Type, typeTable: TypeTable): boolean {
       return true;
     case TypeKind.NULL:
     case TypeKind.OBJECT:
+    case TypeKind.FILE:
       return false;
     case TypeKind.ARRAY:
       return isParamArrayElementTypeSafe(type.elementType, typeTable);
@@ -62,6 +63,7 @@ export function isQueryParamTypeSafe(
     case TypeKind.DATE_TIME:
       return true;
     case TypeKind.NULL:
+    case TypeKind.FILE:
       return false;
     case TypeKind.ARRAY:
       return isParamArrayElementTypeSafe(type.elementType, typeTable);
@@ -103,6 +105,7 @@ export function isHeaderTypeSafe(type: Type, typeTable: TypeTable): boolean {
     case TypeKind.BOOLEAN_LITERAL:
     case TypeKind.ARRAY:
     case TypeKind.OBJECT:
+    case TypeKind.FILE:
       return false;
     case TypeKind.UNION:
     case TypeKind.INTERSECTION:
@@ -141,6 +144,7 @@ function isParamObjectPropertyTypeSafe(
     case TypeKind.NULL:
     case TypeKind.ARRAY:
     case TypeKind.OBJECT:
+    case TypeKind.FILE:
       return false;
     case TypeKind.UNION:
     case TypeKind.INTERSECTION:
@@ -182,6 +186,7 @@ function isParamArrayElementTypeSafe(
     case TypeKind.NULL:
     case TypeKind.ARRAY:
     case TypeKind.OBJECT:
+    case TypeKind.FILE:
       return false;
     case TypeKind.UNION:
     case TypeKind.INTERSECTION:

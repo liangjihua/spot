@@ -70,6 +70,7 @@ function findOmittableFieldViolation(
     case TypeKind.INT_LITERAL:
     case TypeKind.DATE:
     case TypeKind.DATE_TIME:
+    case TypeKind.FILE:
       return [];
     case TypeKind.OBJECT: {
       const violationsInObjectPropTypes = type.properties.reduce<string[]>(

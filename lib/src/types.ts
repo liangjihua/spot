@@ -5,6 +5,7 @@ export enum TypeKind {
   BOOLEAN = "boolean",
   BOOLEAN_LITERAL = "boolean-literal",
   STRING = "string",
+  FILE = "file",
   STRING_LITERAL = "string-literal",
   FLOAT = "float",
   DOUBLE = "double",
@@ -39,7 +40,8 @@ export type Type =
   | ArrayType
   | UnionType
   | ReferenceType
-  | IntersectionType;
+  | IntersectionType
+  | FileType;
 
 /**
  * A concrete type is any type that is not a union of types, intersection or reference to a type.
@@ -172,6 +174,16 @@ export interface ReferenceType {
   name: string;
 }
 
+export interface FileType {
+  kind: TypeKind.FILE;
+}
+
+export function fileType(): FileType {
+  return {
+    kind: TypeKind.FILE
+  }
+}
+
 // Type builders
 
 export function nullType(): NullType {
@@ -296,6 +308,14 @@ export function referenceType(name: string): ReferenceType {
 }
 
 // Type guards
+
+export function isFileType(type: Type): type is FileType {
+  return type.kind === TypeKind.FILE;
+}
+
+export function isNotFileType<T extends Type>(type: T): type is Exclude<T, FileType> {
+  return !isFileType(type);
+}
 
 export function isNullType(type: Type): type is NullType {
   return type.kind === TypeKind.NULL;
@@ -454,6 +474,7 @@ export function isPrimitiveType(type: Type): type is PrimitiveType {
     case TypeKind.INT_LITERAL:
     case TypeKind.DATE:
     case TypeKind.DATE_TIME:
+    case TypeKind.FILE:
       return true;
     case TypeKind.OBJECT:
     case TypeKind.ARRAY:
@@ -483,8 +504,8 @@ export function isNotLiteralType<T extends Type>(
 
 export function isSchemaPropAllowedType<T extends Type>(
   type: T
-): type is Exclude<T, NullType | ReferenceType> {
-  return isNotNullType(type) && isNotReferenceType(type);
+): type is Exclude<T, NullType | ReferenceType | FileType> {
+  return isNotNullType(type) && isNotReferenceType(type) && isNotFileType(type);
 }
 
 // Guard helpers

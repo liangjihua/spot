@@ -76,7 +76,8 @@ describe("Server", () => {
                     optional: false
                   }
                 ]
-              }
+              },
+              contentType: 'application/json'
             }
           }
         ],

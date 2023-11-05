@@ -152,7 +152,7 @@ function endpointToOperationObject(
         default: endpoint.defaultResponse
       },
       typeTable
-    )
+    ),
   };
 }
 
@@ -297,8 +297,9 @@ function endpointResponseToResponseObject(
         )
       : undefined;
 
+  const contentType = (response.body?.type.kind == TypeKind.FILE && "application/octet-stream") || "application/json"
   const content = response.body && {
-    "application/json": {
+    [contentType]: {
       schema: typeToSchemaOrReferenceObject(response.body.type, typeTable)
     }
   };

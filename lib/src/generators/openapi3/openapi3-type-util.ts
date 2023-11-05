@@ -126,6 +126,11 @@ export function typeToSchemaOrReferenceObject(
       return intersectionTypeToSchema(type, typeTable);
     case TypeKind.REFERENCE:
       return referenceTypeToSchema(type, nullable);
+    case TypeKind.FILE:
+      return stringSchema({
+        format: "binary",
+        nullable
+      })
     default:
       assertNever(type);
   }

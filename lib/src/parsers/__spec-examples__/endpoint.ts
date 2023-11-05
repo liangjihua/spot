@@ -16,7 +16,15 @@ class NotEndpointClass {}
 @endpoint({
   method: "POST",
   path: "/path/:pathParam/nest",
-  tags: ["tag1", "tag2"]
+  tags: ["tag1", "tag2"],
+  extension: {
+    "x-simple": "spot",
+    "x-object": {
+      foo: "foo",
+      bar: "bar"
+    },
+    "x-array": ["foo", "bar"]
+  }
 })
 class EndpointClass {
   @request

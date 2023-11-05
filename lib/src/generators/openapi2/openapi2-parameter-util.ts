@@ -158,6 +158,10 @@ function basicTypeToParameterBasicTypeObject(
         format: "date-time",
         schemaProps: type.schemaProps
       });
+    case TypeKind.FILE:
+      return stringParameterObject({
+        format: "binary",
+      })
     case TypeKind.OBJECT:
       throw new Error("Object is not supported for parameters in OpenAPI 2");
     case TypeKind.UNION:

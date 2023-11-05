@@ -49,6 +49,8 @@ export function typeToJsonSchemaType(
       return { type: "string", format: "date" };
     case TypeKind.DATE_TIME:
       return { type: "string", format: "date-time" };
+    case TypeKind.FILE:
+      return { type: "string", format: "binary" };
     case TypeKind.STRING:
       return {
         type: "string"

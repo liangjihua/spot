@@ -34,3 +34,8 @@ export type Date = string;
  * "2018-08-24T21:18:36Z"
  */
 export type DateTime = string;
+
+/**
+ * A string with format binary
+ */
+export type File = string;

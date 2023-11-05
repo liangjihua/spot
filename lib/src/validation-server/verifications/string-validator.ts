@@ -32,6 +32,7 @@ export class StringValidator {
       case TypeKind.DATE:
       case TypeKind.DATE_TIME:
       case TypeKind.INTERSECTION:
+      case TypeKind.FILE:
         return `"${input}" should be ${type.kind}`;
       case TypeKind.BOOLEAN_LITERAL:
       case TypeKind.STRING_LITERAL:
@@ -72,6 +73,7 @@ export class StringValidator {
           type,
           (str: string) => str.toLowerCase() === type.value.toString()
         );
+      case TypeKind.FILE:
       case TypeKind.STRING:
         return this.validateWithValidator(
           input,

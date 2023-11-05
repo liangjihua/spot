@@ -83,6 +83,7 @@ export interface OperationObject {
   deprecated?: boolean;
   security?: SecurityRequirementObject[];
   servers?: ServerObject[];
+  [propname:string]:any;
 }
 
 // https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#referenceObject

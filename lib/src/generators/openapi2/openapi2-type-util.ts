@@ -103,6 +103,11 @@ export function typeToSchemaObject(
         schemaProps: type.schemaProps,
         nullable
       });
+    case TypeKind.FILE:
+      return stringSchema({
+        format: "binary",
+        nullable
+      })
     case TypeKind.OBJECT:
       return objectTypeToSchema(type, typeTable, nullable);
     case TypeKind.ARRAY:

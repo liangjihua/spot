@@ -54,7 +54,7 @@ import {
   doesInterfaceEvaluatesToNever,
   possibleRootTypes,
   isObjectType,
-  isSchemaPropAllowedType
+  isSchemaPropAllowedType, fileType, FileType
 } from "../types";
 import { err, ok, Result } from "../util";
 import { getJsDoc, getPropertyName } from "./parser-helpers";
@@ -114,7 +114,8 @@ const SPOT_TYPE_ALIASES = [
   "Integer",
   "Int32",
   "Int64",
-  "String"
+  "String",
+  "File"
 ];
 
 /**
@@ -136,7 +137,8 @@ function parseTypeReference(
   | FloatType
   | DoubleType
   | Int32Type
-  | Int64Type,
+  | Int64Type
+  | FileType,
   ParserError
 > {
   const declarationResult = getTargetDeclarationFromTypeReference(typeNode);
@@ -162,6 +164,8 @@ function parseTypeReference(
             return ok(dateType());
           case "DateTime":
             return ok(dateTimeType());
+          case "File":
+            return ok(fileType());
           default:
             throw new Error(`Internal type ${name} must not be redefined`);
         }
