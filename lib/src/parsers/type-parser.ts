@@ -193,6 +193,11 @@ function parseTypeReference(
           throw new Error(`Type ${name} defined multiple times`);
         }
       } else {
+        if (lociTable.get(LociTable.typeKey(name))) {
+          return ok(referenceType(name))
+        } else {
+          lociTable.addMorphNode(LociTable.typeKey(name), decTypeNode);
+        }
         const targetTypeResult = parseType(decTypeNode, typeTable, lociTable);
         if (targetTypeResult.isErr()) return targetTypeResult;
         const type = targetTypeResult.unwrap();
@@ -205,7 +210,6 @@ function parseTypeReference(
           type,
           description
         });
-        lociTable.addMorphNode(LociTable.typeKey(name), decTypeNode);
       }
       return ok(referenceType(name));
     }
@@ -218,6 +222,11 @@ function parseTypeReference(
           throw new Error(`Type ${name} defined multiple times`);
         }
       } else {
+        if (lociTable.get(LociTable.typeKey(name))) {
+          return ok(referenceType(name))
+        } else {
+          lociTable.addMorphNode(LociTable.typeKey(name), declaration);
+        }
         const targetTypeResult = parseInterfaceDeclaration(
           declaration,
           typeTable,
@@ -232,7 +241,6 @@ function parseTypeReference(
           type,
           description
         });
-        lociTable.addMorphNode(LociTable.typeKey(name), declaration);
       }
       return ok(referenceType(name));
     }
