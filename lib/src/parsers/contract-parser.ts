@@ -46,7 +46,7 @@ export function parseContract(
       })
     );
   }
-  if (!/^[\w\s-]*$/.test(name)) {
+  /*if (!/^[\w\s-]*$/.test(name)) {
     return err(
       new ParserError(
         "api name may only contain alphanumeric, space, underscore and hyphen characters",
@@ -56,7 +56,7 @@ export function parseContract(
         }
       )
     );
-  }
+  }*/
 
   // Handle description
   const descriptionDoc = getJsDoc(klass);
