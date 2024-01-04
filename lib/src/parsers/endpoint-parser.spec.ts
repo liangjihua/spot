@@ -49,7 +49,7 @@ describe("endpoint parser", () => {
         "x-array": ["foo", "bar"]
       },
       description: "endpoint description",
-      summary: undefined,
+      summary: "endpoint description",
       draft: false,
       method: "POST",
       name: "EndpointClass",

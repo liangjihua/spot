@@ -61,7 +61,7 @@ export function parseEndpoint(
     ?.getTags()
     .find(tag => tag.getTagName() === "summary");
 
-  const summary = summaryNode?.getComment()?.toString();
+  const summary = summaryNode?.getComment()?.toString() || description;
 
   // Handle draft
   const draft = klass.getDecorator("draft") !== undefined;
