@@ -13,6 +13,6 @@ class DefaultResponseClass {
     headers: {
       property: string;
     },
-    @body body: string
+    @body() body: string
   ) {}
 }

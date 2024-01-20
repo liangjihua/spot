@@ -3,11 +3,11 @@ import { body } from "@airtasker/spot";
 class BodyClass {
   bodyMethod(
     notBody: string,
-    @body body: string,
+    @body() body: string,
     /** Body description */
-    @body bodyWithDescription: string,
-    @body intersectionTypeBody: TypeAliasIntersection,
-    @body optionalBody?: string
+    @body() bodyWithDescription: string,
+    @body() intersectionTypeBody: TypeAliasIntersection,
+    @body() optionalBody?: string
   ) {}
 }
 

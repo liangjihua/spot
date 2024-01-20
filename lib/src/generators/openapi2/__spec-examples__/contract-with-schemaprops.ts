@@ -50,7 +50,7 @@ class EndpointWithSchemaPropsOnHeaders {
 
   @response({ status: 200 })
   successResponse(
-    @body
+    @body()
     body: {
       id: String;
       name: String;

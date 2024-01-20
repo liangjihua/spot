@@ -17,12 +17,12 @@ class Contract {}
 class PostEndpoint {
   @request
   request(
-    @body
+    @body()
     body: Body
   ) {}
 
   @response({ status: 201 })
-  successResponse(@body body: Body) {}
+  successResponse(@body() body: Body) {}
 }
 
 interface Body {

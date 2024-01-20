@@ -26,6 +26,8 @@ describe("request parser", () => {
 
     expect(result).toStrictEqual({
       body: {
+        contentType: "application/json",
+        required: true,
         type: { kind: TypeKind.STRING }
       },
       headers: [

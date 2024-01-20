@@ -47,12 +47,12 @@ class GetEndpoint {
   ) {}
 
   @defaultResponse
-  defaultResponse(@body body: DefaultBody) {}
+  defaultResponse(@body() body: DefaultBody) {}
 
   @response({ status: 200 })
   successResponse(
     @headers headers: { responseHeader: String },
-    @body body: SuccessBody
+    @body() body: SuccessBody
   ) {}
 }
 

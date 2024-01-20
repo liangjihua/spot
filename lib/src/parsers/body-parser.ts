@@ -5,6 +5,12 @@ import { LociTable } from "../locations";
 import { TypeTable } from "../types";
 import { err, ok, Result } from "../util";
 import { parseType } from "./type-parser";
+import {
+  getDecoratorConfigOrThrow,
+  getObjLiteralPropOrThrow,
+  getPropValueAsStringOrThrow
+} from "./parser-helpers";
+import {BodyConfig} from "../syntax/body";
 
 export function parseBody(
   parameter: ParameterDeclaration,
@@ -21,12 +27,25 @@ export function parseBody(
       })
     );
   }
+
+  const decorator = parameter.getDecoratorOrThrow("body");
+  const decoratorConfig = getDecoratorConfigOrThrow(decorator);
+  const contentTypeProp = getObjLiteralPropOrThrow<BodyConfig>(
+    decoratorConfig,
+    "contentType"
+  );
+  const contentTypeLiteral = getPropValueAsStringOrThrow(contentTypeProp);
   const typeResult = parseType(
     parameter.getTypeNodeOrThrow(),
     typeTable,
     lociTable
   );
+
   if (typeResult.isErr()) return typeResult;
   // TODO: add loci information
-  return ok({ type: typeResult.unwrap() });
+  return ok({
+    contentType: contentTypeLiteral.getLiteralValue(),
+    type: typeResult.unwrap(),
+    required: !parameter.isOptional()
+  });
 }

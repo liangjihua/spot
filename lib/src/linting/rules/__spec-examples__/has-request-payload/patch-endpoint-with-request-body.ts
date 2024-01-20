@@ -22,12 +22,12 @@ class PatchEndpoint {
     pathParams: {
       id: String;
     },
-    @body
+    @body()
     body: Body
   ) {}
 
   @response({ status: 200 })
-  successResponse(@body body: Body) {}
+  successResponse(@body() body: Body) {}
 }
 
 interface Body {

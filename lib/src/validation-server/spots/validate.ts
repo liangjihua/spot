@@ -8,16 +8,16 @@ import { Header, InternalServerError, UnprocessableEntityError } from "./utils";
 })
 export class Validate {
   @request
-  request(@body body: ValidateRequest) {}
+  request(@body() body: ValidateRequest) {}
 
   @response({ status: 200 })
-  response(@body body: ValidateResponse) {}
+  response(@body() body: ValidateResponse) {}
 
   @response({ status: 422 })
-  unprocessableEntityError(@body body: UnprocessableEntityError) {}
+  unprocessableEntityError(@body() body: UnprocessableEntityError) {}
 
   @response({ status: 500 })
-  internalServerError(@body body: InternalServerError) {}
+  internalServerError(@body() body: InternalServerError) {}
 }
 
 export interface RecordedRequest {

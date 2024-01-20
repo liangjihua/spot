@@ -41,7 +41,7 @@ class EndpointClass {
     queryParams: {
       property: string;
     },
-    @body
+    @body()
     body: string
   ) {}
 
@@ -51,7 +51,7 @@ class EndpointClass {
     headers: {
       property: string;
     },
-    @body body: string
+    @body() body: string
   ) {}
 
   @response({ status: 200 })
@@ -60,7 +60,7 @@ class EndpointClass {
     headers: {
       property: string;
     },
-    @body body: string
+    @body() body: string
   ) {}
 }
 

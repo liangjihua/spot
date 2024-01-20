@@ -17,7 +17,7 @@ class Contract {}
 })
 class EndpointWithResponseHeaders {
   @request
-  request(@body body: { name: String }) {}
+  request(@body() body: { name: String }) {}
 
   @response({ status: 201 })
   successResponse(
@@ -26,6 +26,6 @@ class EndpointWithResponseHeaders {
       Location: String;
       Link?: String;
     },
-    @body body: { id: String; name: String }
+    @body() body: { id: String; name: String }
   ) {}
 }

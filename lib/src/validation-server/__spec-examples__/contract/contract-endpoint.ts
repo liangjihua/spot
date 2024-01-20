@@ -47,13 +47,13 @@ class GetUser {
       Location: String;
     },
     /** User response body */
-    @body body: UserBody
+    @body() body: UserBody
   ) {}
 
   /** Bad request response */
   @response({ status: 404 })
   badRequestResponse(
     /** Error response body */
-    @body body: ErrorBody
+    @body() body: ErrorBody
   ) {}
 }

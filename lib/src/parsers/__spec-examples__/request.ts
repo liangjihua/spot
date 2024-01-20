@@ -26,6 +26,6 @@ class RequestClass {
     queryParams: {
       property: string;
     },
-    @body body: string
+    @body() body: string
   ) {}
 }

@@ -84,7 +84,9 @@ export interface QueryParam {
 }
 
 export interface Body {
+  contentType: string;
   type: Type;
+  required: boolean;
 }
 
 export interface Oa3Server {

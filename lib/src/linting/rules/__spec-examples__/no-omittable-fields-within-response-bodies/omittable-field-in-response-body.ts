@@ -17,13 +17,13 @@ class Contract {}
 })
 class Endpoint {
   @request
-  request(@body body: Body) {}
+  request(@body() body: Body) {}
 
   @response({ status: 200 })
-  successResponse(@body body: Body) {}
+  successResponse(@body() body: Body) {}
 
   @defaultResponse
-  defaultResponse(@body body: Body) {}
+  defaultResponse(@body() body: Body) {}
 }
 
 interface Body {

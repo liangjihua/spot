@@ -136,7 +136,7 @@ class Contract {}
 })
 class Endpoint {
   @defaultResponse
-  defaultResponse(@body body: Body) {}
+  defaultResponse(@body() body: Body) {}
 }
 
 interface Body {

@@ -17,7 +17,7 @@ class Contract {}
 class HeadEndpoint {
   @request
   request(
-    @body
+    @body()
     body: Body
   ) {}
 

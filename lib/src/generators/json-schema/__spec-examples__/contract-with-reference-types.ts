@@ -9,7 +9,7 @@ class Contract {}
 })
 class GetEndpoint {
   @response({ status: 200 })
-  successResponse(@body body: Users) {}
+  successResponse(@body() body: Users) {}
 }
 
 type Users = User[];

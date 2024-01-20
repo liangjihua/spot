@@ -18,15 +18,15 @@ class Contract {}
 class Endpoint {
   @request
   request(
-    @body
+    @body()
     body: RequestBody
   ) {}
 
   @response({ status: 200 })
-  successResponse(@body body: SuccessBody) {}
+  successResponse(@body() body: SuccessBody) {}
 
   @defaultResponse
-  defaultResponse(@body body: ErrorBody) {}
+  defaultResponse(@body() body: ErrorBody) {}
 }
 
 interface RequestBody {

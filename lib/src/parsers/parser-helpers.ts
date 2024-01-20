@@ -15,7 +15,7 @@ import {
   StringLiteral,
   ts,
   Node,
-  TypeNode
+  TypeNode, FunctionDeclaration
 } from "ts-morph";
 import { HttpMethod, QueryParamArrayStrategy } from "../definitions";
 import { getTargetDeclarationFromTypeReference } from "./type-parser";
@@ -206,19 +206,46 @@ export function getDecoratorConfigOrThrow(
   }
   // expect a single argument
   const decoratorArgs = decorator.getArguments();
-  if (decoratorArgs.length !== 1) {
+  if (decoratorArgs.length === 1) {
+    const decoratorArg = decoratorArgs[0];
+    // expect the argument to be an object literal expression
+    if (!Node.isObjectLiteralExpression(decoratorArg)) {
+      throw new Error(
+        `expected decorator factory configuration argument to be an object literal`
+      );
+    }
+    return decoratorArg;
+  }
+  if (decoratorArgs.length === 0) {
+    return getDecoratorConfigDefaultValueOrThrow(decorator)
+  }
+  throw new Error(
+    `expected exactly one argument, got ${decoratorArgs.length}`
+  );
+}
+
+export function getDecoratorConfigDefaultValueOrThrow(
+  decorator: Decorator
+): ObjectLiteralExpression {
+  const decoratorNode = decorator.getNameNode().getDefinitionNodes()[0]
+  if (!Node.isFunctionDeclaration(decoratorNode)) {
     throw new Error(
-      `expected exactly one argument, got ${decoratorArgs.length}`
+      `expected decorator factory must be a function, got ${decoratorNode.getKindName()}`
+    )
+  }
+  const decoratorParameters = decoratorNode.getParameters();
+  if (decoratorParameters.length !== 1) {
+    throw new Error(
+      `expected exactly one argument, got ${decoratorParameters.length}`
     );
   }
-  // expect the argument to be an object literal expression
-  const decoratorArg = decoratorArgs[0];
-  if (!Node.isObjectLiteralExpression(decoratorArg)) {
+  const decoratorExpression = decoratorParameters[0].getInitializer()
+  if (!Node.isObjectLiteralExpression(decoratorExpression)) {
     throw new Error(
       `expected decorator factory configuration argument to be an object literal`
     );
   }
-  return decoratorArg;
+  return decoratorExpression;
 }
 
 // EXPRESSION HELPERS

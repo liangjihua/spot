@@ -34,7 +34,7 @@ class Endpoint {
     queryParams: {
       query: String | Float;
     },
-    @body
+    @body()
     body: RequestBody
   ) {}
 
@@ -44,7 +44,7 @@ class Endpoint {
     headers: {
       header: String | Float;
     },
-    @body body: SuccessBody
+    @body() body: SuccessBody
   ) {}
 
   @defaultResponse
@@ -53,7 +53,7 @@ class Endpoint {
     headers: {
       header: String | Float;
     },
-    @body body: ErrorBody
+    @body() body: ErrorBody
   ) {}
 }
 

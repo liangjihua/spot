@@ -9,7 +9,7 @@
 class CreateUserEndpoint {
   @request
   request(
-    @body body: CreateUserBody
+    @body() body: CreateUserBody
     // ...
   ) {}
   // ...
@@ -18,7 +18,7 @@ class CreateUserEndpoint {
     // ...
   )
   successResponse(
-    @body body: UserBody
+    @body() body: UserBody
     // ...
   ) {}
   // ...
@@ -35,8 +35,16 @@ interface UserBody {
 }
 ```
  */
-export declare function body(
-  target: any,
-  propertyKey: string,
-  parameterIndex: number
-): void;
+export function body(config: BodyConfig = {contentType: 'application/json'}) {
+    return function (
+        target: any,
+        propertyKey: string,
+        parameterIndex: number
+    ){}
+}
+
+
+export interface BodyConfig {
+  /** Request body content-type */
+  contentType: string;
+}

@@ -28,9 +28,11 @@ describe("body parser", () => {
     ).unwrapOrThrow();
 
     expect(result).toStrictEqual({
+      contentType: 'application/json',
       type: {
         kind: TypeKind.STRING
-      }
+      },
+      required: true
     });
   });
 
@@ -42,9 +44,11 @@ describe("body parser", () => {
     ).unwrapOrThrow();
 
     expect(result).toStrictEqual({
+      contentType: 'application/json',
       type: {
         kind: TypeKind.STRING
-      }
+      },
+      required: true
     });
   });
 
@@ -56,10 +60,12 @@ describe("body parser", () => {
     ).unwrapOrThrow();
 
     expect(result).toStrictEqual({
+      contentType: 'application/json',
       type: {
         kind: "reference",
         name: "TypeAliasIntersection"
-      }
+      },
+      required: true
     });
   });
 

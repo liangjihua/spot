@@ -22,9 +22,9 @@ class PatchEndpoint {
     pathParams: {
       id: String;
     },
-    @body body: { name: String }
+    @body() body: { name: String }
   ) {}
 
   @response({ status: 200 })
-  successResponse(@body body: { id: String; name: String }) {}
+  successResponse(@body() body: { id: String; name: String }) {}
 }

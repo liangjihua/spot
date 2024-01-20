@@ -26,11 +26,11 @@ class EndpointWithResponses {
   ) {}
 
   @response({ status: 200 })
-  successResponse(@body body: { id: String; name: String }) {}
+  successResponse(@body() body: { id: String; name: String }) {}
 
   @response({ status: 404 })
-  notFoundResponse(@body body: { message: String; status: String }) {}
+  notFoundResponse(@body() body: { message: String; status: String }) {}
 
   @defaultResponse
-  defaultResponse(@body body: { message: String }) {}
+  defaultResponse(@body() body: { message: String }) {}
 }

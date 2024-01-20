@@ -239,7 +239,7 @@ function endpointRequestBodyToRequestBodyObject(
   typeTable: TypeTable
 ): RequestBodyObject {
   const content = {
-    "application/json": {
+    [requestBody.contentType]: {
       schema: typeToSchemaOrReferenceObject(requestBody.type, typeTable)
     }
   };

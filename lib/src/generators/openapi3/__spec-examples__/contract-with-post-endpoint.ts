@@ -16,8 +16,8 @@ class Contract {}
 })
 class PostEndpoint {
   @request
-  request(@body body: { name: String }) {}
+  request(@body() body: { name: String }) {}
 
   @response({ status: 201 })
-  successResponse(@body body: { id: String; name: String }) {}
+  successResponse(@body() body: { id: String; name: String }) {}
 }

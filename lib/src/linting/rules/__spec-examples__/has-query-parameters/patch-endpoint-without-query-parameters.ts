@@ -19,7 +19,7 @@ class PatchEndpoint {
   request() {}
 
   @response({ status: 200 })
-  successResponse(@body body: Body) {}
+  successResponse(@body() body: Body) {}
 }
 
 interface Body {

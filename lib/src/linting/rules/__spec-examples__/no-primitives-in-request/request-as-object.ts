@@ -9,7 +9,7 @@ class Contract {}
 })
 class Endpoint {
   @request
-  request(@body body: Body) {}
+  request(@body() body: Body) {}
 }
 
 interface Body {

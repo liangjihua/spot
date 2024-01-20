@@ -26,6 +26,8 @@ describe("default response parser", () => {
 
     expect(result).toStrictEqual({
       body: {
+        contentType: "application/json",
+        required: true,
         type: { kind: TypeKind.STRING }
       },
       description: "default response description",

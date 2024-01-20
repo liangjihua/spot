@@ -54,7 +54,7 @@ class CreateUser {
       user?: UserQuery;
     },
     /** request body */
-    @body body: CreateUserRequestBody
+    @body() body: CreateUserRequestBody
   ) {}
 
   /** Successful creation of user */
@@ -66,20 +66,20 @@ class CreateUser {
       Location: String;
     },
     /** User response body */
-    @body body: UserBody
+    @body() body: UserBody
   ) {}
 
   /** Bad request response */
   @response({ status: 400 })
   badRequestResponse(
     /** Error response body */
-    @body body: ErrorBody
+    @body() body: ErrorBody
   ) {}
 
   @defaultResponse
   unexpectedResponse(
     /** Error response body */
-    @body body: ErrorBody
+    @body() body: ErrorBody
   ) {}
 }
 
@@ -113,7 +113,7 @@ class GetCompany {
       accept: number;
     },
     /** User response body */
-    @body body: CompanyBody
+    @body() body: CompanyBody
   ) {}
 }
 

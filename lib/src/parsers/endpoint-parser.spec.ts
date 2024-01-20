@@ -27,6 +27,8 @@ describe("endpoint parser", () => {
     expect(result).toStrictEqual({
       defaultResponse: {
         body: {
+          contentType: "application/json",
+          required: true,
           type: { kind: TypeKind.STRING }
         },
         description: undefined,
@@ -56,6 +58,8 @@ describe("endpoint parser", () => {
       path: "/path/:pathParam/nest",
       request: {
         body: {
+          contentType: "application/json",
+          required: true,
           type: { kind: TypeKind.STRING }
         },
         headers: [
@@ -88,6 +92,8 @@ describe("endpoint parser", () => {
       responses: [
         {
           body: {
+            contentType: "application/json",
+            required: true,
             type: { kind: TypeKind.STRING }
           },
           description: undefined,

@@ -9,7 +9,7 @@ class Contract {}
 })
 class Endpoint {
   @request
-  request(@body body: UserName) {}
+  request(@body() body: UserName) {}
 }
 
 type UserName = string;
