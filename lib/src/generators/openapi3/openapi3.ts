@@ -297,7 +297,7 @@ function endpointResponseToResponseObject(
         )
       : undefined;
 
-  const contentType = (response.body?.type.kind == TypeKind.FILE && "application/octet-stream") || "application/json"
+  const contentType = response.body?.contentType ? response.body?.contentType : (response.body?.type.kind == TypeKind.FILE && "application/octet-stream") || "application/json"
   const content = response.body && {
     [contentType]: {
       schema: typeToSchemaOrReferenceObject(response.body.type, typeTable)
