@@ -197,6 +197,38 @@ export function parseTypeReferencePropertySignaturesOrThrow(
  *
  * @param decorator the source decorator
  */
+export function getDecoratorConfig(
+  decorator: Decorator
+): ObjectLiteralExpression | undefined {
+  // expect a decorator factory
+  if (!decorator.isDecoratorFactory()) {
+    throw new Error("expected decorator factory");
+  }
+  // expect a single argument
+  const decoratorArgs = decorator.getArguments();
+  if (decoratorArgs.length === 1) {
+    const decoratorArg = decoratorArgs[0];
+    // expect the argument to be an object literal expression
+    if (!Node.isObjectLiteralExpression(decoratorArg)) {
+      throw new Error(
+        `expected decorator factory configuration argument to be an object literal`
+      );
+    }
+    return decoratorArg;
+  }
+  if (decoratorArgs.length === 0) {
+    return getDecoratorConfigDefaultValue(decorator)
+  }
+  return undefined
+}
+
+/**
+ * Retrieve a decorator factory's configuration. The configuration is
+ * the first parameter of the decorator and is expected to be an object
+ * literal.
+ *
+ * @param decorator the source decorator
+ */
 export function getDecoratorConfigOrThrow(
   decorator: Decorator
 ): ObjectLiteralExpression {
@@ -217,16 +249,19 @@ export function getDecoratorConfigOrThrow(
     return decoratorArg;
   }
   if (decoratorArgs.length === 0) {
-    return getDecoratorConfigDefaultValueOrThrow(decorator)
+    const decoratorDefaultArg = getDecoratorConfigDefaultValue(decorator)
+    if (decoratorDefaultArg) {
+      return decoratorDefaultArg
+    }
   }
   throw new Error(
     `expected exactly one argument, got ${decoratorArgs.length}`
   );
 }
 
-export function getDecoratorConfigDefaultValueOrThrow(
+export function getDecoratorConfigDefaultValue(
   decorator: Decorator
-): ObjectLiteralExpression {
+): ObjectLiteralExpression | undefined {
   const decoratorNode = decorator.getNameNode().getDefinitionNodes()[0]
   if (!Node.isFunctionDeclaration(decoratorNode)) {
     throw new Error(
@@ -240,9 +275,9 @@ export function getDecoratorConfigDefaultValueOrThrow(
     );
   }
   const decoratorExpression = decoratorParameters[0].getInitializer()
-  if (!Node.isObjectLiteralExpression(decoratorExpression)) {
+  if (decoratorExpression && !Node.isObjectLiteralExpression(decoratorExpression)) {
     throw new Error(
-      `expected decorator factory configuration argument to be an object literal`
+      `expected decorator factory default configuration argument to be an object literal`
     );
   }
   return decoratorExpression;

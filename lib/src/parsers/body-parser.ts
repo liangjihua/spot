@@ -1,4 +1,4 @@
-import { ParameterDeclaration } from "ts-morph";
+import {ObjectLiteralExpression, ParameterDeclaration} from "ts-morph";
 import { Body } from "../definitions";
 import { OptionalNotAllowedError, ParserError } from "../errors";
 import { LociTable } from "../locations";
@@ -6,7 +6,7 @@ import { TypeTable } from "../types";
 import { err, ok, Result } from "../util";
 import { parseType } from "./type-parser";
 import {
-  getDecoratorConfigOrThrow,
+  getDecoratorConfig,
   getObjLiteralPropOrThrow,
   getPropValueAsStringOrThrow
 } from "./parser-helpers";
@@ -29,12 +29,8 @@ export function parseBody(
   }
 
   const decorator = parameter.getDecoratorOrThrow("body");
-  const decoratorConfig = getDecoratorConfigOrThrow(decorator);
-  const contentTypeProp = getObjLiteralPropOrThrow<BodyConfig>(
-    decoratorConfig,
-    "contentType"
-  );
-  const contentTypeLiteral = getPropValueAsStringOrThrow(contentTypeProp);
+  const decoratorConfig = getDecoratorConfig(decorator);
+  const contentType = decoratorConfig ? getContentTypeFromConfig(decoratorConfig) : 'application/json'
   const typeResult = parseType(
     parameter.getTypeNodeOrThrow(),
     typeTable,
@@ -44,8 +40,18 @@ export function parseBody(
   if (typeResult.isErr()) return typeResult;
   // TODO: add loci information
   return ok({
-    contentType: contentTypeLiteral.getLiteralValue(),
+    contentType: contentType,
     type: typeResult.unwrap(),
     required: !parameter.isOptional()
   });
+}
+
+
+function getContentTypeFromConfig(decoratorConfig: ObjectLiteralExpression): string {
+  const contentTypeProp = getObjLiteralPropOrThrow<BodyConfig>(
+    decoratorConfig,
+    "contentType"
+  );
+  const contentTypeLiteral = getPropValueAsStringOrThrow(contentTypeProp);
+  return contentTypeLiteral.getLiteralValue()
 }
