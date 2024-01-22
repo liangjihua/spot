@@ -62,9 +62,10 @@ function validateProject(project: Project): void {
       diagnostics
         .map(diagnostic => {
           const message = diagnostic.getMessageText();
-          return typeof message === "string"
+          const messageText = typeof message === "string"
             ? message
             : message.getMessageText();
+          return `${diagnostic.compilerObject.file}: ${messageText}`
         })
         .join("\n")
     );
