@@ -170,7 +170,7 @@ function extractEndpointExtensions(
     )
   }
   for (const property of propertyAssignment) {
-    if (!property.getName().startsWith("\"x-")) {
+    if (!property.getName().substring(1).startsWith("x-")) {
       return err(
         new ParserError("endpoint extension key must start with \"x-\"", {
           file: property.getSourceFile().getFilePath(),
