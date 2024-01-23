@@ -11,7 +11,7 @@ import {
   isSpecificResponse,
   Oa3ServerVariable,
   Request,
-  Response
+  Response, Tag
 } from "../../definitions";
 import {
   areStringLiteralTypes,
@@ -41,7 +41,7 @@ import {
   ResponsesObject,
   ExamplesSet,
   ServerObject,
-  ServerVariableObject
+  ServerVariableObject, TagObject
 } from "./openapi3-specification";
 import {
   typeToSchemaOrReferenceObject,
@@ -71,7 +71,8 @@ export function generateOpenAPI3(contract: Contract): OpenApiV3 {
         [SECURITY_HEADER_SCHEME_NAME]: []
       }
     ],
-    servers: contract.oa3servers && contractToOa3ServerObject(contract)
+    servers: contract.oa3servers && contractToOa3ServerObject(contract),
+    tags: contract.tags && contractToTagObject(contract)
   };
 
   return openapi;
@@ -392,6 +393,23 @@ function contractToOa3ServerObject(
     });
   });
   return serversObject;
+}
+
+function contractToTagObject(
+  contract: Contract
+): TagObject[] | undefined {
+  if (contract.tags?.length === 0) {
+    return undefined;
+  }
+  const tags = contract.tags
+  const tagObjects: TagObject[] = [];
+  tags?.map(tag => {
+    tagObjects.push({
+      name: tag.name,
+      description: tag.description
+    })
+  })
+  return tagObjects
 }
 
 function oa3ServerVariableToServerVariableObject(

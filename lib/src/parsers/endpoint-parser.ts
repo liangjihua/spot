@@ -210,7 +210,7 @@ function extractEndpointTags(
         })
       );
     }
-    /*if (!/^[\w\s-]*$/.test(tag)) {
+    if (!/^[\w\s-]*$/.test(tag)) {
       return err(
         new ParserError(
           "endpoint tag may only contain alphanumeric, space, underscore and hyphen characters",
@@ -220,7 +220,7 @@ function extractEndpointTags(
           }
         )
       );
-    }*/
+    }
     tags.push(tag);
   }
 

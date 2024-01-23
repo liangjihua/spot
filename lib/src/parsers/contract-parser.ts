@@ -7,6 +7,7 @@ import { TypeTable } from "../types";
 import { err, ok, Result } from "../util";
 import { defaultConfig, parseConfig } from "./config-parser";
 import { parseEndpoint } from "./endpoint-parser";
+import { parseTags } from "./tag-parser";
 import {
   getClassWithDecoratorOrThrow,
   getDecoratorConfigOrThrow,
@@ -118,6 +119,19 @@ export function parseContract(
   if (serversResult.isErr()) return serversResult;
   const oa3servers = serversResult.unwrap();
 
+  const tagsResult = parseTags(klass, typeTable, lociTable);
+  if (tagsResult.isErr()) return tagsResult;
+  const tags = tagsResult.unwrap();
+  const tagNames = tags.map(t=>t.name)
+  const entPointsTags = endpoints.map((endpoint) => endpoint.tags)
+      .reduce((p, n) => n.concat(p), []);
+  const distinctTags = [...new Set(entPointsTags)];
+  distinctTags.filter(tag => !tagNames.includes(tag)).forEach(tag => {
+      tags.push({
+          name: tag
+      })
+  })
+
   const contract = {
     name,
     description,
@@ -126,7 +140,8 @@ export function parseContract(
     security,
     endpoints,
     version,
-    oa3servers
+    oa3servers,
+    tags
   };
   return ok({ contract, lociTable });
 }

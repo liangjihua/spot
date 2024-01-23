@@ -9,6 +9,12 @@ export interface Contract {
   security?: SecurityHeader;
   endpoints: Endpoint[];
   oa3servers?: Oa3Server[];
+  tags?: Tag[];
+}
+
+export interface Tag {
+  name: string;
+  description?: string;
 }
 
 export interface Config {

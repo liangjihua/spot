@@ -68,6 +68,18 @@ describe("OpenAPI 3 generator", () => {
     });
   });
 
+  describe("tag group", () =>{
+    test("contract with tag group", async ()=> {
+      const contract = generateContract("contract-with-tag-group.ts");
+      const result = generateOpenAPI3(contract);
+      expect(result.tags).toHaveLength(1);
+      expect(result.tags).toStrictEqual([{
+        name: 'user',
+        description: 'User API'
+      }])
+    })
+  })
+
   describe("HTTP verbs", () => {
     test("GET endpoint", async () => {
       const contract = generateContract("contract-with-get-endpoint.ts");

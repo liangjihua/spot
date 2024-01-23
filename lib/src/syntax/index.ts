@@ -11,3 +11,4 @@ export * from "./response";
 export * from "./security-header";
 export * from "./types";
 export * from "./draft";
+export * from "./tag"
