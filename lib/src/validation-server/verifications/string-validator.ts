@@ -27,6 +27,7 @@ export class StringValidator {
       case TypeKind.STRING:
       case TypeKind.FLOAT:
       case TypeKind.DOUBLE:
+      case TypeKind.DECIMAL:
       case TypeKind.INT32:
       case TypeKind.INT64:
       case TypeKind.DATE:
@@ -88,6 +89,7 @@ export class StringValidator {
         );
       case TypeKind.FLOAT:
       case TypeKind.DOUBLE:
+      case TypeKind.DECIMAL:
         return this.validateWithValidator(input, type, validator.isFloat);
       case TypeKind.FLOAT_LITERAL:
         return this.validateWithValidator(

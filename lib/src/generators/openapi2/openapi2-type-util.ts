@@ -65,6 +65,11 @@ export function typeToSchemaObject(
         schemaProps: type.schemaProps,
         nullable
       });
+    case TypeKind.DECIMAL:
+      return numberSchema({
+        schemaProps: type.schemaProps,
+        nullable
+      });
     case TypeKind.FLOAT_LITERAL:
       return numberSchema({
         values: [type.value],

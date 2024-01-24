@@ -7,6 +7,9 @@ export type Float = number;
 /** A double precision floating point number  */
 export type Double = number;
 
+/** A decimal floating point number  */
+export type Decimal = number;
+
 /** An integer */
 export type Integer = number;
 
@@ -39,3 +42,4 @@ export type DateTime = string;
  * A string with format binary
  */
 export type File = string;
+

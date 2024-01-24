@@ -54,7 +54,7 @@ import {
   doesInterfaceEvaluatesToNever,
   possibleRootTypes,
   isObjectType,
-  isSchemaPropAllowedType, fileType, FileType
+  isSchemaPropAllowedType, fileType, FileType, decimalType, DecimalType
 } from "../types";
 import { err, ok, Result } from "../util";
 import { getJsDoc, getPropertyName } from "./parser-helpers";
@@ -115,7 +115,8 @@ const SPOT_TYPE_ALIASES = [
   "Int32",
   "Int64",
   "String",
-  "File"
+  "File",
+  "Decimal"
 ];
 
 /**
@@ -136,6 +137,7 @@ function parseTypeReference(
   | DateTimeType
   | FloatType
   | DoubleType
+  | DecimalType
   | Int32Type
   | Int64Type
   | FileType,
@@ -176,6 +178,8 @@ function parseTypeReference(
             return ok(floatType());
           case "Double":
             return ok(doubleType());
+          case "Decimal":
+            return ok(decimalType());
           case "Integer":
           case "Int32":
             return ok(int32Type());

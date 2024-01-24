@@ -108,6 +108,7 @@ export function extractJSDocExamples(
     spotTypesToJSTypesMap.set(TypeKind.INT64, "number");
     spotTypesToJSTypesMap.set(TypeKind.FLOAT, "number");
     spotTypesToJSTypesMap.set(TypeKind.DOUBLE, "number");
+    spotTypesToJSTypesMap.set(TypeKind.DECIMAL, "number");
 
     const typeSpecified: string =
       spotTypesToJSTypesMap.get(type.kind) || type.kind;

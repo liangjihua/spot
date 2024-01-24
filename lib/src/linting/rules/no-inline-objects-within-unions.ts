@@ -133,6 +133,7 @@ function findInlineObjectInUnionViolations(
     case TypeKind.STRING_LITERAL:
     case TypeKind.FLOAT:
     case TypeKind.DOUBLE:
+    case TypeKind.DECIMAL:
     case TypeKind.FLOAT_LITERAL:
     case TypeKind.INT32:
     case TypeKind.INT64:

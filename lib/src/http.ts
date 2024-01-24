@@ -1,5 +1,5 @@
 import assertNever from "assert-never";
-import { dereferenceType, Type, TypeKind, TypeTable } from "./types";
+import {dereferenceType, Type, TypeKind, TypeTable} from "./types";
 
 /**
  * Check if a type is safe for use as a path parameter.
@@ -15,6 +15,7 @@ export function isPathParamTypeSafe(type: Type, typeTable: TypeTable): boolean {
     case TypeKind.STRING_LITERAL:
     case TypeKind.FLOAT:
     case TypeKind.DOUBLE:
+    case TypeKind.DECIMAL:
     case TypeKind.FLOAT_LITERAL:
     case TypeKind.INT32:
     case TypeKind.INT64:
@@ -55,6 +56,7 @@ export function isQueryParamTypeSafe(
     case TypeKind.STRING_LITERAL:
     case TypeKind.FLOAT:
     case TypeKind.DOUBLE:
+    case TypeKind.DECIMAL:
     case TypeKind.FLOAT_LITERAL:
     case TypeKind.INT32:
     case TypeKind.INT64:
@@ -99,6 +101,7 @@ export function isHeaderTypeSafe(type: Type, typeTable: TypeTable): boolean {
     case TypeKind.INT_LITERAL:
     case TypeKind.DATE:
     case TypeKind.DATE_TIME:
+    case TypeKind.DECIMAL:
       return true;
     case TypeKind.NULL:
     case TypeKind.BOOLEAN:
@@ -134,6 +137,7 @@ function isParamObjectPropertyTypeSafe(
     case TypeKind.STRING_LITERAL:
     case TypeKind.FLOAT:
     case TypeKind.DOUBLE:
+    case TypeKind.DECIMAL:
     case TypeKind.FLOAT_LITERAL:
     case TypeKind.INT32:
     case TypeKind.INT64:
@@ -176,6 +180,7 @@ function isParamArrayElementTypeSafe(
     case TypeKind.STRING_LITERAL:
     case TypeKind.FLOAT:
     case TypeKind.DOUBLE:
+    case TypeKind.DECIMAL:
     case TypeKind.FLOAT_LITERAL:
     case TypeKind.INT32:
     case TypeKind.INT64:

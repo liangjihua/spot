@@ -21,6 +21,7 @@ export function generateData(types: TypeTable, type: Type): any {
       return type.value;
     case TypeKind.FLOAT:
     case TypeKind.DOUBLE:
+    case TypeKind.DECIMAL:
       return randomDouble(100);
     case TypeKind.INT32:
       return randomInteger(100);

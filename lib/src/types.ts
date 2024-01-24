@@ -9,6 +9,7 @@ export enum TypeKind {
   STRING_LITERAL = "string-literal",
   FLOAT = "float",
   DOUBLE = "double",
+  DECIMAL = "decimal",
   FLOAT_LITERAL = "float-literal",
   INT32 = "int32",
   INT64 = "int64",
@@ -41,7 +42,8 @@ export type Type =
   | UnionType
   | ReferenceType
   | IntersectionType
-  | FileType;
+  | FileType
+  | DecimalType;
 
 /**
  * A concrete type is any type that is not a union of types, intersection or reference to a type.
@@ -102,6 +104,11 @@ export interface FloatType {
 
 export interface DoubleType {
   kind: TypeKind.DOUBLE;
+  schemaProps?: SchemaProp[];
+}
+
+export interface DecimalType {
+  kind: TypeKind.DECIMAL;
   schemaProps?: SchemaProp[];
 }
 
@@ -227,6 +234,12 @@ export function floatType(): FloatType {
 export function doubleType(): DoubleType {
   return {
     kind: TypeKind.DOUBLE
+  };
+}
+
+export function decimalType(): DecimalType {
+  return {
+    kind: TypeKind.DECIMAL
   };
 }
 
@@ -474,6 +487,7 @@ export function isPrimitiveType(type: Type): type is PrimitiveType {
     case TypeKind.INT_LITERAL:
     case TypeKind.DATE:
     case TypeKind.DATE_TIME:
+    case TypeKind.DECIMAL:
     case TypeKind.FILE:
       return true;
     case TypeKind.OBJECT:

@@ -62,6 +62,7 @@ export function typeToJsonSchemaType(
       };
     case TypeKind.FLOAT:
     case TypeKind.DOUBLE:
+    case TypeKind.DECIMAL:
       return {
         type: "number"
       };

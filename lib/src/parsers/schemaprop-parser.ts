@@ -268,6 +268,7 @@ const spotTypesToJSTypesMap = new Map<TypeKind, TypeKind | "number">([
   [TypeKind.FLOAT, "number"],
   [TypeKind.FLOAT_LITERAL, "number"],
   [TypeKind.DOUBLE, "number"],
+  [TypeKind.DECIMAL, "number"],
   [TypeKind.BOOLEAN_LITERAL, TypeKind.BOOLEAN],
   [TypeKind.STRING_LITERAL, TypeKind.STRING],
   [TypeKind.DATE, TypeKind.STRING],

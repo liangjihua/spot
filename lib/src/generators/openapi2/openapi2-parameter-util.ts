@@ -126,6 +126,10 @@ function basicTypeToParameterBasicTypeObject(
         format: "double",
         schemaProps: type.schemaProps
       });
+    case TypeKind.DECIMAL:
+      return numberParameterObject({
+        schemaProps: type.schemaProps
+      });
     case TypeKind.FLOAT_LITERAL:
       return numberParameterObject({
         values: [type.value],
