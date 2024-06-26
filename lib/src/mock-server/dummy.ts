@@ -1,12 +1,21 @@
 import assertNever from "assert-never";
 import { generate as generateRandomString } from "randomstring";
-import { Type, TypeKind, TypeTable } from "../types";
+import {SchemaProp, Type, TypeKind, TypeTable} from "../types";
 
 /**
  * Generates dummy data based on a type.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function generateData(types: TypeTable, type: Type): any {
+  if ('schemaProps' in type) {
+    const schemaProps: SchemaProp[] | undefined = type.schemaProps
+    const defaultValue = schemaProps
+      ?.filter((schemaProp) => schemaProp.name === 'default')
+      ?.map(schemaProp => schemaProp.value)
+    if (defaultValue) {
+      return defaultValue[0];
+    }
+  }
   switch (type.kind) {
     case TypeKind.NULL:
       return null;
