@@ -1,366 +1,418 @@
-# Spot
+# spot-liangjihua
 
-**Spot** (_"Single Point Of Truth"_) is a concise, developer-friendly way to describe your API contract.
+spot-liangjihua 对 @airtasker/spot 进行了如下增强:
 
-Leveraging the TypeScript syntax, it lets you describe your API and generate other API contract formats you need (OpenAPI, Swagger, JSON Schema).
+1. 添加了对 endpoint 的 extension 的支持
+2. 添加了 File 类型参数，可以用于文件上传、下载
+3. 添加了 Decimal 类型参数的支持
+4. 支持指定 contentType
+5. 添加了 tag group 的支持
+6. 添加了基于 AI 脚本生成的 mock 功能
 
-You don't need to use TypeScript in your codebase to benefit from using Spot.
 
-Example of an API definition file `api.ts` which defines a single `POST` endpoint to create a user:
-
-```typescript
-import { api, endpoint, request, response, body } from "@airtasker/spot";
-
-@api({
-  name: "My API"
-})
-class Api {}
-
-@endpoint({
-  method: "POST",
-  path: "/users"
-})
-class CreateUser {
-  @request
-  request(@body body: CreateUserRequest) {}
-
-  @response({ status: 201 })
-  response(@body body: CreateUserResponse) {}
-}
-
-interface CreateUserRequest {
-  firstName: string;
-  lastName: string;
-}
-
-interface CreateUserResponse {
-  firstName: string;
-  lastName: string;
-  role: string;
-}
-```
-
-## Getting Started
-
-Get started with writing Spot contracts - [Spot Guide](https://github.com/airtasker/spot/wiki/Spot-Guide)
-
-For all available syntax, see [Spot Syntax](https://github.com/airtasker/spot/wiki/Spot-Syntax)
-
-### Installation
-
-With [yarn](https://yarnpkg.com/en/docs/usage) installed and initialized add `@airtasker/spot` to your project:
-
-```sh
-yarn add @airtasker/spot
-```
-
-You can pass the definition above to a generator by simply running:
-
-```sh
-npx @airtasker/spot generate --contract api.ts
-```
-
-# Why we built Spot
-
-At first glance, you may wonder why we bothered building Spot. Why not use OpenAPI (formely known as Swagger) to describe your API?
-
-At the core, we built Spot because we wanted a better developer experience.
-
-## Writing contracts
-
-OpenAPI documents are stored as YAML files, following a very specific schema. You won’t know that you used the wrong field name or forgot to wrap a type definition into a schema object unless you run a good OpenAPI linter. Most developers who aren’t intimately familiar with the OpenAPI specification end up using a visual editor such as Swagger Editor or Stoplight.
-
-Since Spot leverages the TypeScript syntax, all you need is to write valid TypeScript code. Your editor will immediately tell you when your code is invalid. It will tell you what’s missing, and you even get autocomplete for free. We could have picked any other typed language—TypeScript just happened to be one of the most concise and ubiquitous for us.
-
-## Reviewing contracts
-
-We believe that API contracts should be checked into Git, or whichever code versioning system you use. In addition, API contracts should be systematically peer reviewed. It’s far too easy for a backend engineer to incorrectly assume what client engineers expect from an endpoint.
-
-Because of their complex nested structure and the richness of the OpenAPI specification, OpenAPI documents can be difficult to review in a pull request. They’re great for machines, but not always for humans.
-
-Spot aims to be as human-readable as possible. We’ve seen developers become a lot more engaged in discussions on pull requests for Spot contracts, compared to our previous OpenAPI documents.
-
-## Interoperability with various formats
-
-Depending on what you're trying to achieve (testing, documentation, client code generation…), you'll find tools that only work with OpenAPI 2 (Swagger), and newer tools that only support OpenAPI 3. You may also find tools for a different API ecosystem such as JSON Schema or API Blueprint.
-
-We built Spot with this in mind. Instead of having to juggle various API format converters, Spot can generate every major API document format. This is why we called it "Single Point Of Truth".
-
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/@airtasker/spot.svg)](https://npmjs.org/package/@airtasker/spot)
-[![CircleCI](https://circleci.com/gh/airtasker/spot/tree/master.svg?style=shield)](https://circleci.com/gh/airtasker/spot/tree/master)
-[![Downloads/week](https://img.shields.io/npm/dw/@airtasker/spot.svg)](https://npmjs.org/package/@airtasker/spot)
-[![License](https://img.shields.io/npm/l/@airtasker/spot.svg)](https://github.com/airtasker/spot/blob/master/package.json)
-
-<!-- toc -->
-* [Spot](#spot)
-* [Why we built Spot](#why-we-built-spot)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-
-# Usage
-
-To get started and set up an API declaration in the current directory, run:
-
-```
-npx @airtasker/spot init
-```
-
-You can then run a generator with:
-
-```
-npx @airtasker/spot generate --contract api.ts
-```
-
-## In Memory Usage
+## endpoint 支持 extension
 
 ```ts
-import { Spot } from "@airtasker/spot";
+import { queryParams, body, endpoint, request, response } from "spot-liangjihua";
 
-const contract = Spot.parseContract("./api.ts")
-const openApi = Spot.OpenApi3.generateOpenAPI3(contract);
+/**
+ * sample endpoint
+ */
+@endpoint({
+  path: '/sample',
+  method: 'GET',
+  extension: {  // 声明扩展字段
+    'x-foo': "bar",
+    'x-operation-extra-annotation': [  // 扩展的值可以是 array 或 object
+      `@PreAuthorize("hasRole('ROLE_ADMIN')")`
+    ]
+  }
+})
+class SamplePath {
 
-console.log(openApi);
+  @request
+  request(
+    @queryParams queryParams: {
+      /**
+       * 请求id
+       */
+      id: string
+    }
+  ) {}
 
-/*
-{
-  openapi: '3.0.2',
-  info: { title: 'my-api', description: undefined, version: '0.0.0' },
-  paths: { '/users': { post: [Object] } },
-  components: {
-    schemas: { CreateUserRequest: [Object], CreateUserResponse: [Object] },
-    securitySchemes: undefined
-  },
-  security: undefined
+  @response({ status: 200 })
+  response(
+    @body() body: string
+  ) {}
 }
-*/
+```
+
+该脚本会生成以下 openapi 片段：
+```yaml
+# ... 省略部分结构
+/sample:
+  get:
+    x-foo: bar
+    x-operation-extra-annotation:
+      - '@PreAuthorize("hasRole(''ROLE_ADMIN'')")'
+    description: sample endpoint
+    summary: sample endpoint
+    operationId: SamplePath
+    parameters:
+      - name: id
+        in: query
+        description: 请求id
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: 200 response
+        content:
+          application/json:
+            schema:
+              type: string
+```
+
+## File 类型参数
+
+File 类型参数通常需要手动指定请求/响应 contentType
+
+```ts
+/**
+ * 上传图片，并返回图片
+ */
+@endpoint({
+  path: '/sample',
+  method: 'POST'
+})
+class SampleFile {
+  @request
+  request(
+    @body({contentType: "multipart/form-data"}) body: {
+      /**
+       * 请求id
+       */
+      photos: File
+    }
+  ) {}
+
+  @response({ status: 200 })
+  response(
+    @body({contentType: "image/png"}) body: File
+  ) {}
+}
+```
+
+该脚本会生成以下 openapi 片段：
+
+```yaml
+# ... 省略部分结构
+/sample:
+  post:
+    description: 上传图片，并返回图片
+    summary: 上传图片，并返回图片
+    operationId: SampleFile
+    parameters: []
+    requestBody:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              photos:
+                type: string
+                format: binary
+                description: 请求id
+            required:
+              - photos
+      required: true
+    responses:
+      '200':
+        description: 200 response
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+```
+
+## Decimal 类型参数
+
+Decimal 类型参数的用于在代码生成中生成 Decimal 类型，而非 double 或 float 。
+
+```ts
+/**
+ * decimal 参数
+ */
+@endpoint({
+  path: '/sample',
+  method: 'POST'
+})
+class SampleEndpoint {
+  @request
+  request(
+    @body() body: {
+      /**
+       * 金额
+       */
+      amount: Decimal
+    }
+  ) {}
+
+  @response({ status: 200 })
+  response(
+    @body() body: Decimal
+  ) {}
+}
 
 ```
 
-# Commands
+该脚本会生成以下 openapi 片段：
 
-<!-- commands -->
-* [`spot checksum SPOT_CONTRACT`](#spot-checksum-spot_contract)
-* [`spot docs SPOT_CONTRACT`](#spot-docs-spot_contract)
-* [`spot generate`](#spot-generate)
-* [`spot help [COMMAND]`](#spot-help-command)
-* [`spot init`](#spot-init)
-* [`spot lint SPOT_CONTRACT`](#spot-lint-spot_contract)
-* [`spot mock SPOT_CONTRACT`](#spot-mock-spot_contract)
-* [`spot validate SPOT_CONTRACT`](#spot-validate-spot_contract)
-* [`spot validation-server SPOT_CONTRACT`](#spot-validation-server-spot_contract)
-
-## `spot checksum SPOT_CONTRACT`
-
-Generate a checksum for a Spot contract
-
-```
-USAGE
-  $ spot checksum SPOT_CONTRACT
-
-ARGUMENTS
-  SPOT_CONTRACT  path to Spot contract
-
-OPTIONS
-  -h, --help  show CLI help
-
-EXAMPLE
-  $ spot checksum api.ts
-```
-
-_See code: [build/cli/src/commands/checksum.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/checksum.js)_
-
-## `spot docs SPOT_CONTRACT`
-
-Preview Spot contract as OpenAPI3 documentation. The documentation server will start on http://localhost:8080.
-
-```
-USAGE
-  $ spot docs SPOT_CONTRACT
-
-ARGUMENTS
-  SPOT_CONTRACT  path to Spot contract
-
-OPTIONS
-  -h, --help       show CLI help
-  -p, --port=port  [default: 8080] Documentation server port
-
-EXAMPLE
-  $ spot docs api.ts
+```yaml
+# ... 省略部分结构
+/sample:
+  post:
+    description: decimal 参数
+    summary: decimal 参数
+    operationId: SampleEndpoint
+    parameters: []
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              amount:
+                type: number
+                description: 金额
+            required:
+              - amount
+      required: true
+    responses:
+      '200':
+        description: 200 response
+        content:
+          application/json:
+            schema:
+              type: number
 ```
 
-_See code: [build/cli/src/commands/docs.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/docs.js)_
+## tag group
 
-## `spot generate`
+tag group 是 openapi 提供的分组方式。通常在生成客户端代码时，会根据 tag group 生成不同的模块。
 
-Runs a generator on an API. Used to produce client libraries, server boilerplates and well-known API contract formats such as OpenAPI.
+```ts
+/**
+ * sample one
+ */
+@endpoint({
+  path: '/sample/one',
+  method: 'GET',
+  tags: [
+    'sample',
+    'one'
+  ]
+})
+class SampleOne {
+  @request
+  request() {}
 
-```
-USAGE
-  $ spot generate
+  @response({ status: 200 })
+  response() {}
+}
 
-OPTIONS
-  -c, --contract=contract    (required) Path to a TypeScript Contract definition
-  -g, --generator=generator  Generator to run
-  -h, --help                 show CLI help
-  -l, --language=language    Language to generate
-  -o, --out=out              Directory in which to output generated files
 
-EXAMPLE
-  $ spot generate --contract api.ts --language yaml --generator openapi3 --out output/
-```
+/**
+ * sample two
+ */
+@endpoint({
+  path: '/sample/two',
+  method: 'GET',
+  tags: [
+    'sample',
+    'two'
+  ]
+})
+class SampleTwo {
+  @request
+  request() {}
 
-_See code: [build/cli/src/commands/generate.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/generate.js)_
-
-## `spot help [COMMAND]`
-
-display help for spot
-
-```
-USAGE
-  $ spot help [COMMAND]
-
-ARGUMENTS
-  COMMAND  command to show help for
-
-OPTIONS
-  --all  see all commands in CLI
-```
-
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.3.1/src/commands/help.ts)_
-
-## `spot init`
-
-Generates the boilerplate for an API.
-
-```
-USAGE
-  $ spot init
-
-OPTIONS
-  -h, --help  show CLI help
-
-EXAMPLE
-  $ spot init
-  Generated the following files:
-  - api.ts
-  - tsconfig.json
-  - package.json
+  @response({ status: 200 })
+  response() {}
+}
 ```
 
-_See code: [build/cli/src/commands/init.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/init.js)_
+```yaml
+# ... 省略部分结构
+/sample/one:
+  get:
+    tags:
+      - one
+      - sample
+    description: sample one
+    summary: sample one
+    operationId: SampleOne
+    parameters: []
+    responses:
+      '200':
+        description: 200 response
+  /sample/two:
+    get:
+      tags:
+        - sample
+        - two
+      description: sample two
+      summary: sample two
+      operationId: SampleTwo
+      parameters: []
+      responses:
+        '200':
+          description: 200 response
 
-## `spot lint SPOT_CONTRACT`
-
-Lint a Spot contract
-
-```
-USAGE
-  $ spot lint SPOT_CONTRACT
-
-ARGUMENTS
-  SPOT_CONTRACT  path to Spot contract
-
-OPTIONS
-  -h, --help                                                     show CLI help
-  --has-discriminator=(error|warn|off)                           Setting for has-discriminator
-  --has-request-payload=(error|warn|off)                         Setting for has-request-payload
-  --has-response=(error|warn|off)                                Setting for has-response
-  --has-response-payload=(error|warn|off)                        Setting for has-response-payload
-  --no-inline-objects-within-unions=(error|warn|off)             Setting for no-inline-objects-within-unions
-  --no-nullable-arrays=(error|warn|off)                          Setting for no-nullable-arrays
-  --no-nullable-fields-within-request-bodies=(error|warn|off)    Setting for no-nullable-fields-within-request-bodies
-  --no-omittable-fields-within-response-bodies=(error|warn|off)  Setting for no-omittable-fields-within-response-bodies
-  --no-trailing-forward-slash=(error|warn|off)                   Setting for no-trailing-forward-slash
-
-EXAMPLES
-  $ spot lint api.ts
-  $ spot lint --has-descriminator=error
-  $ spot lint --no-nullable-arrays=off
-```
-
-_See code: [build/cli/src/commands/lint.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/lint.js)_
-
-## `spot mock SPOT_CONTRACT`
-
-Run a mock server based on a Spot contract
-
-```
-USAGE
-  $ spot mock SPOT_CONTRACT
-
-ARGUMENTS
-  SPOT_CONTRACT  path to Spot contract
-
-OPTIONS
-  -h, --help                                   show CLI help
-  -k, --qwenApiKey=qwenApiKey                  指定通义千问大模型的 api key，开启 AI 脚本生成
-
-  -m, --qwenModel=qwenModel                    指定通义千问大模型，目前实现试验下来，对于 tool calling 支持比较好的只有
-                                               qwen-max 系列，qwen-plus 输出的结果不太稳定
-
-  -p, --port=port                              (required) [default: 3010] Port on which to run the mock server
-
-  -s, --enableScript                           是否启用脚本功能，启用脚本功能将使用基于 AI 生成的脚本来生成模拟数据。通
-                                               过这种方式生成的数据具有更好的可用性。你还需要指定 qwenApiKey 参数来开启
-                                               AI 脚本生成。
-
-  --pathPrefix=pathPrefix                      Prefix to prepend to each endpoint path
-
-  --proxyBaseUrl=proxyBaseUrl                  If set, the server will act as a proxy and fetch data from the given
-                                               remote server instead of mocking it
-
-  --proxyFallbackBaseUrl=proxyFallbackBaseUrl  Like proxyBaseUrl, except used when the requested API does not match
-                                               defined SPOT contract. If unset, 404 will always be returned.
-
-  --proxyMockBaseUrl=proxyMockBaseUrl          Like proxyBaseUrl, except used to proxy draft endpoints instead of
-                                               returning mocked responses.
-
-EXAMPLE
-  $ spot mock api.ts
+# ... 省略部分结构
+tags:
+  - name: sample
+  - name: one
+  - name: two
 ```
 
-_See code: [build/cli/src/commands/mock.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/mock.js)_
+在入口文件中可以定义所有 tag 的描述:
 
-## `spot validate SPOT_CONTRACT`
+```ts
+import {api, tag} from "spot-liangjihua";
 
-Validate a Spot contract
 
-```
-USAGE
-  $ spot validate SPOT_CONTRACT
+@api({
+  name: "sample api"
+})
+class Api {
 
-ARGUMENTS
-  SPOT_CONTRACT  path to Spot contract
-
-OPTIONS
-  -h, --help  show CLI help
-
-EXAMPLE
-  $ spot validate api.ts
-```
-
-_See code: [build/cli/src/commands/validate.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/validate.js)_
-
-## `spot validation-server SPOT_CONTRACT`
-
-Start the spot contract validation server
-
-```
-USAGE
-  $ spot validation-server SPOT_CONTRACT
-
-ARGUMENTS
-  SPOT_CONTRACT  path to Spot contract
-
-OPTIONS
-  -h, --help       show CLI help
-  -p, --port=port  [default: 5907] The port where application will be available
-
-EXAMPLE
-  $ spot validation-server api.ts
+  /**
+   * 示例
+   */
+  @tag
+  sample() {}
+  
+  /**
+   * 一号示例
+   */
+  @tag
+  one() {}
+  
+  /**
+   *  二号示例
+   */
+  @tag
+  two() {}
+}
 ```
 
-_See code: [build/cli/src/commands/validation-server.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/validation-server.js)_
-<!-- commandsstop -->
+这会生成以下 openapi 片段：
+
+```yaml
+
+tags:
+  - name: sample
+    description: 示例
+  - name: one
+    description: 一号示例
+  - name: two
+    description: 二号示例
+```
+
+## 基于 AI 脚本生成的 mock server
+
+mock server 使得接口在定义完成后立即就可以访问，这解耦了界面开发与接口开发。
+但 mock server 返回的数据是混乱的，无意义的。mock server 仅能够根据参数类型生成 mock 数据，无法根据业务逻辑生成 mock 数据。
+构造良好的 mock 数据在以前需要工程师使用如 faker.js 之类的库手动编写，这非常耗时。
+
+通过 AIGC，我们可以自动生成有语义的 faker.js 脚本，mock server 调用这些脚本来生成 mock 数据。
+
+如以下接口定义：
+
+```ts
+/**
+ * 用户信息
+ */
+@endpoint({
+  path: '/api/user',
+  method: 'GET',
+  tags: [
+    'user'
+  ]
+})
+class GetUser {
+  @request
+  request(){}
+
+  @response({status: 200})
+  response(
+    @body() body: UserInfo
+  ){}
+}
+
+/**
+ * 用户信息
+ */
+interface UserInfo {
+  
+  /** 用户昵称 */
+  nickname: string;
+  
+  /** 用户头像 */
+  avatar: string;
+
+  /** 用户手机号 */
+  phone: string;
+  
+  /** 用户ID，大于0 */
+  userId: Int64;
+}
+```
+
+mock server 启用 AI 前生成数据：
+
+```json
+{
+  "nickname": "CoO17XfPOhgoAzTkHz1oMyZdiswOnPhc",
+  "avatar": "GzcGR9GcQyb9CmHc7blkAMSQnhSUdeOx",
+  "phone": "858pfhJw8rqs0JOWynMbqTWtJ75wcZiX",
+  "userId": 1125899906848255
+}
+```
+
+mock server 启用 AI 后生成数据：
+
+```json
+{
+  "nickname": "Hadley",
+  "avatar": "https://avatars.githubusercontent.com/u/45949971",
+  "phone": "833-3808-4110",
+  "userId": 83006
+}
+```
+
+后者明显要友好的多，也更符合实际业务。
+
+mock server 通过两个参数启用 AI 生成：
+
+- enableScript: 启用脚本生成。注意，运行未经过检验的脚本可能导致安全问题，不要在服务器上启用此功能
+- qwenApiKey: 提供通义千问调用的 api key，通义千问用于生成 faker.js 脚本
+
+这两个参数可以通过命令行传入 ：
+
+```shell
+npx spot-liangjihua mock api.ts --enableScript --qwenApiKey=${YOUR_QWEN_API_KEY}
+```
+
+或环境变量：
+
+```shell
+export SPOT_ENABLE_SCRIPT=true
+export SPOT_QWEN_API_KEY=${YOUR_QWEN_API_KEY}
+npx spot-liangjihua mock api.ts
+```
+
+同时传入的情况下，命令行的优先级高于环境变量。
