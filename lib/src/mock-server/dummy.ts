@@ -2,15 +2,10 @@ import assertNever from "assert-never";
 import { generate as generateRandomString } from "randomstring";
 import {ObjectPropertiesType, SchemaProp, Type, TypeKind, TypeTable} from "../types";
 import {getScript, saveScript} from "./script-store";
-import fetch from "node-fetch";
 import {mockConfig} from "./mock-config";
 
 
-/**
- * Generates dummy data based on a type.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function generateData(types: TypeTable, type: Type): any {
+function getDefaultValue(type: Type) {
   if ('schemaProps' in type) {
     const schemaProps: SchemaProp[] | undefined = type.schemaProps
     const defaultValue = schemaProps
@@ -19,6 +14,18 @@ export function generateData(types: TypeTable, type: Type): any {
     if (defaultValue) {
       return defaultValue[0];
     }
+  }
+  return;
+}
+
+/**
+ * Generates dummy data based on a type.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function generateData(types: TypeTable, type: Type): any {
+  let defaultVal = getDefaultValue(type);
+  if (defaultVal !== undefined) {
+    return defaultVal
   }
   switch (type.kind) {
     case TypeKind.NULL:
@@ -105,6 +112,10 @@ function randomDouble(max: number): number {
 
 export function generateObjectPropertyData(types: TypeTable, propertyType: ObjectPropertiesType): any {
   const type = propertyType.type
+  let defaultVal = getDefaultValue(type);
+  if (defaultVal !== undefined) {
+    return defaultVal
+  }
   switch (type.kind) {
     case TypeKind.BOOLEAN_LITERAL:
       return type.value;
