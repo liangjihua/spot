@@ -40,6 +40,8 @@ describe("Hash", () => {
           pathParams: [],
           queryParams: [],
           body: {
+            required: true,
+            contentType: "application/json",
             type: {
               kind: TypeKind.STRING
             }

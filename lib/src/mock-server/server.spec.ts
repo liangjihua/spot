@@ -67,6 +67,8 @@ describe("Server", () => {
             status: 201,
             headers: [],
             body: {
+              required: true,
+              contentType: "application/json",
               type: {
                 kind: TypeKind.OBJECT,
                 properties: [

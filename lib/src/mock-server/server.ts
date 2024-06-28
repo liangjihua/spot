@@ -1,11 +1,13 @@
 import cors from "cors";
 import express from "express";
 import { Contract } from "../definitions";
-import { TypeTable } from "../types";
+import {TypeKind, TypeTable} from "../types";
 import { Logger } from "../utilities/logger";
 import { generateData } from "./dummy";
 import { isRequestForEndpoint } from "./matcher";
 import { proxyRequest } from "./proxy";
+import {mockConfig} from "./mock-config";
+
 
 export interface ProxyConfig {
   isHttps: boolean;
@@ -26,7 +28,10 @@ export function runMockServer(
     proxyConfig,
     proxyMockConfig,
     proxyFallbackConfig,
-    logger
+    logger,
+    qwenApiKey,
+    qwenModel,
+    enableScript
   }: {
     port: number;
     pathPrefix: string;
@@ -34,8 +39,14 @@ export function runMockServer(
     proxyMockConfig?: ProxyConfig | null;
     proxyFallbackConfig?: ProxyConfig | null;
     logger: Logger;
+    qwenApiKey?: string;
+    qwenModel?: string;
+    enableScript: boolean
   }
 ) {
+
+  mockConfig.init({qwenApiKey, qwenModel, enableScript}, logger)
+
   const app = express();
   app.use(express.raw({ type: () => true }));
   app.use(cors());
@@ -75,13 +86,20 @@ export function runMockServer(
             return;
           }
           resp.status("status" in response ? response.status : 200);
-          resp.header("content-type", "application/json");
+          resp.header("content-type", response.body?.contentType);
           if (response.body) {
-            resp.send(
-              JSON.stringify(
-                generateData(TypeTable.fromArray(api.types), response.body.type)
-              )
-            );
+            if (response.body.type.kind === TypeKind.FILE) {
+              resp.setHeader('Content-disposition', 'attachment; filename=mockfile');
+              resp.write("mockfile")
+              resp.status(200)
+              resp.end()
+            } else {
+              resp.send(
+                JSON.stringify(
+                  generateData(TypeTable.fromArray(api.types), response.body.type)
+                )
+              );
+            }
           }
         }
         return;
