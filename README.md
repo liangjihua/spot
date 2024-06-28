@@ -169,7 +169,7 @@ EXAMPLE
   $ spot checksum api.ts
 ```
 
-_See code: [build/cli/src/commands/checksum.js](https://github.com/airtasker/spot/blob/v1.13.3/build/cli/src/commands/checksum.js)_
+_See code: [build/cli/src/commands/checksum.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/checksum.js)_
 
 ## `spot docs SPOT_CONTRACT`
 
@@ -190,7 +190,7 @@ EXAMPLE
   $ spot docs api.ts
 ```
 
-_See code: [build/cli/src/commands/docs.js](https://github.com/airtasker/spot/blob/v1.13.3/build/cli/src/commands/docs.js)_
+_See code: [build/cli/src/commands/docs.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/docs.js)_
 
 ## `spot generate`
 
@@ -211,7 +211,7 @@ EXAMPLE
   $ spot generate --contract api.ts --language yaml --generator openapi3 --out output/
 ```
 
-_See code: [build/cli/src/commands/generate.js](https://github.com/airtasker/spot/blob/v1.13.3/build/cli/src/commands/generate.js)_
+_See code: [build/cli/src/commands/generate.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/generate.js)_
 
 ## `spot help [COMMAND]`
 
@@ -249,7 +249,7 @@ EXAMPLE
   - package.json
 ```
 
-_See code: [build/cli/src/commands/init.js](https://github.com/airtasker/spot/blob/v1.13.3/build/cli/src/commands/init.js)_
+_See code: [build/cli/src/commands/init.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/init.js)_
 
 ## `spot lint SPOT_CONTRACT`
 
@@ -280,7 +280,7 @@ EXAMPLES
   $ spot lint --no-nullable-arrays=off
 ```
 
-_See code: [build/cli/src/commands/lint.js](https://github.com/airtasker/spot/blob/v1.13.3/build/cli/src/commands/lint.js)_
+_See code: [build/cli/src/commands/lint.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/lint.js)_
 
 ## `spot mock SPOT_CONTRACT`
 
@@ -295,7 +295,17 @@ ARGUMENTS
 
 OPTIONS
   -h, --help                                   show CLI help
+  -k, --qwenApiKey=qwenApiKey                  指定通义千问大模型的 api key，开启 AI 脚本生成
+
+  -m, --qwenModel=qwenModel                    指定通义千问大模型，目前实现试验下来，对于 tool calling 支持比较好的只有
+                                               qwen-max 系列，qwen-plus 输出的结果不太稳定
+
   -p, --port=port                              (required) [default: 3010] Port on which to run the mock server
+
+  -s, --enableScript                           是否启用脚本功能，启用脚本功能将使用基于 AI 生成的脚本来生成模拟数据。通
+                                               过这种方式生成的数据具有更好的可用性。你还需要指定 qwenApiKey 参数来开启
+                                               AI 脚本生成。
+
   --pathPrefix=pathPrefix                      Prefix to prepend to each endpoint path
 
   --proxyBaseUrl=proxyBaseUrl                  If set, the server will act as a proxy and fetch data from the given
@@ -311,7 +321,7 @@ EXAMPLE
   $ spot mock api.ts
 ```
 
-_See code: [build/cli/src/commands/mock.js](https://github.com/airtasker/spot/blob/v1.13.3/build/cli/src/commands/mock.js)_
+_See code: [build/cli/src/commands/mock.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/mock.js)_
 
 ## `spot validate SPOT_CONTRACT`
 
@@ -331,7 +341,7 @@ EXAMPLE
   $ spot validate api.ts
 ```
 
-_See code: [build/cli/src/commands/validate.js](https://github.com/airtasker/spot/blob/v1.13.3/build/cli/src/commands/validate.js)_
+_See code: [build/cli/src/commands/validate.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/validate.js)_
 
 ## `spot validation-server SPOT_CONTRACT`
 
@@ -352,5 +362,5 @@ EXAMPLE
   $ spot validation-server api.ts
 ```
 
-_See code: [build/cli/src/commands/validation-server.js](https://github.com/airtasker/spot/blob/v1.13.3/build/cli/src/commands/validation-server.js)_
+_See code: [build/cli/src/commands/validation-server.js](https://github.com/airtasker/spot/blob/v1.13.5/build/cli/src/commands/validation-server.js)_
 <!-- commandsstop -->

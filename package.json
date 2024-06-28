@@ -1,7 +1,7 @@
 {
   "name": "spot-liangjihua",
   "description": "fork from @airtasker/spot",
-  "version": "1.13.4-beta",
+  "version": "1.13.5",
   "author": "Francois Wouts, Leslie Fung",
   "bin": {
     "spot": "./bin/run"
