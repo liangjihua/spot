@@ -372,7 +372,7 @@ interface UserInfo {
 }
 ```
 
-mock server 启用 AI 前生成数据：
+mock server 生成数据（未开启AI）：
 
 ```json
 {
@@ -383,7 +383,7 @@ mock server 启用 AI 前生成数据：
 }
 ```
 
-mock server 启用 AI 后生成数据：
+mock server 生成数据（开启 AI）：
 
 ```json
 {
@@ -398,7 +398,7 @@ mock server 启用 AI 后生成数据：
 
 mock server 通过两个参数启用 AI 生成：
 
-- enableScript: 启用脚本生成。注意，运行未经过检验的脚本可能导致安全问题，不要在服务器上启用此功能
+- enableScript: 启用脚本生成。`注意，运行未经过检验的脚本可能导致安全问题，不要在服务器上启用此功能`
 - qwenApiKey: 提供通义千问调用的 api key，通义千问用于生成 faker.js 脚本
 
 这两个参数可以通过命令行传入 ：
